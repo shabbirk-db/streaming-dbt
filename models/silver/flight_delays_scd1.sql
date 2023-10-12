@@ -17,3 +17,8 @@ select
     , isarrdelayed
     , airline_name||'-'||origin_city||'-'||dest_city as unique_id
 from {{ ref("airline_trips_silver") }}
+
+{% if is_incremental() %}
+    -- this filter will only be applied on an incremental run
+    where Date > DATEADD(DAY, -3, (select max(Date) as max_date from {{ ref("airline_trips_silver") }})) 
+{% endif %}
