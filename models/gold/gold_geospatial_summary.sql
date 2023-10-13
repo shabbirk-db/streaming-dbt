@@ -17,7 +17,7 @@ geospatial_aggregation AS (
     SELECT
     date
     ,airline_name
-    origin_airport_name
+    ,origin_airport_name
     ,origin_city
     ,origin_coordinates_array[0] as Longitude
     ,origin_coordinates_array[1] as Latitude
