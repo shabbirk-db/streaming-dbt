@@ -1,6 +1,17 @@
 # Databricks notebook source
-dbutils.widgets.text("input_volume", "<dbfs:/Volumes/your_example/pathhere>")
-input_volume = dbutils.widgets.get("input_volume")
+dbutils.widgets.text("input_catalog", "catalog")
+dbutils.widgets.text("input_schema", "schema")
+
+input_catalog = dbutils.widgets.get("input_catalog")
+input_schema = dbutils.widgets.get("input_schema")
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC
+# MAGIC CREATE VOLUME IF NOT EXISTS `${input_catalog}`.`${input_schema}`.`airlines`;
+# MAGIC CREATE VOLUME IF NOT EXISTS `${input_catalog}`.`${input_schema}`.`iata_data`;
+# MAGIC CREATE VOLUME IF NOT EXISTS `${input_catalog}`.`${input_schema}`.`raw`
 
 # COMMAND ----------
 
@@ -12,28 +23,22 @@ for stream in spark.streams.active:
 import pyspark.sql.functions as F
 import re
 
-course = "sql_workshop"
-
-username = spark.sql("SELECT current_user()").collect()[0][0]
-userhome = f"dbfs:/Volumes/uc_shabbirkhanbhai/airlines_source"
-database = f"""{course}_{re.sub("[^a-zA-Z0-9]", "_", username)}_db"""
-
+userhome = f"dbfs:/Volumes/{input_catalog}/{input_schema}"
 
 print(f"""
-username: {username}
-userhome: {userhome}
-database: {database}""")
+
+Created 3 volumes in : {input_catalog}.{input_schema}
+
+The 'input_path' for dbt_project.yml is: {userhome}
+""")
 
 dbutils.widgets.text("mode", "cleanup")
 mode = dbutils.widgets.get("mode")
 
 if mode == "initialise":
     print("Resetting workspace...")
-    spark.sql(f"DROP DATABASE IF EXISTS {database} CASCADE")
     dbutils.fs.rm(f'{userhome}/raw', True)
-    
-spark.sql(f"CREATE DATABASE IF NOT EXISTS {database}")
-spark.sql(f"USE {database}")
+    dbutils.fs.rm(f'{userhome}/airlines', True)
 
 fileIndex = 3
 totalFiles = 200
@@ -120,5 +125,4 @@ simulate = StreamSimulation()
 
 if mode == "cleanup":
     print("Deleting workspace...")
-    spark.sql(f"DROP DATABASE IF EXISTS {database} CASCADE")
     dbutils.fs.rm(userhome, True)

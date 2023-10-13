@@ -3,16 +3,26 @@
 # MAGIC
 # MAGIC ## Instructions
 # MAGIC
-# MAGIC - Create a Volume in Unity Catalog first that you can access, to be used as a landing zone for all simulated stream data
-# MAGIC - Enter the full Volume path in the widget of the format: `<dbfs:/Volumes/your_example/pathhere>`, for example: `dbfs:/Volumes/uc_shabbirkhanbhai/airlines_source`
+# MAGIC - Attach a multi-node, UC enabled cluster
+# MAGIC
+# MAGIC - Designate a catalog and schema as a landing zone for all simulated stream data
+# MAGIC   - Enter these into the notebook widget, e.g. Catalog: `uc_shabbirkhanbhai` and Schema: `airlines_source`
+# MAGIC   - The script will use this location to create several UC Volumes for the demo
+# MAGIC     - i.e. The volumes would be created in the path: `dbfs:/Volumes/uc_shabbirkhanbhai/airlines_source`
+# MAGIC     - Take note of the path created, as this will be needed in the `dbt_project.yml` as a data source
+# MAGIC
 # MAGIC - Initialise the stream (may take ~6 minutes)
-# MAGIC - Simulate a stream of files, either through arrival('once') or 'continuous'
+# MAGIC
+# MAGIC - Simulate a stream of .json files, either through arrival('once') or 'continuous'
 # MAGIC   - There are up to 200 files to stream, I recommend keeping it small at first, up to 10, and then potentially trying larger after the dbt project successfully runs
 
 # COMMAND ----------
 
-dbutils.widgets.text("input_volume", "<dbfs:/Volumes/your_example/pathhere>")
-input_volume = dbutils.widgets.get("input_volume")
+dbutils.widgets.text("input_catalog", "catalog")
+dbutils.widgets.text("input_schema", "schema")
+
+input_catalog = dbutils.widgets.get("input_catalog")
+input_schema = dbutils.widgets.get("input_schema")
 
 # COMMAND ----------
 
@@ -22,7 +32,7 @@ input_volume = dbutils.widgets.get("input_volume")
 
 # COMMAND ----------
 
-# MAGIC %run ./_resources/autoloader-setup-uc-volumes $mode = "initialise" $input_volume=$input_volume
+# MAGIC %run ./_resources/autoloader-setup-uc-volumes $mode = "initialise" $input_catalog=$input_catalog $input_schema=$input_schema
 
 # COMMAND ----------
 
