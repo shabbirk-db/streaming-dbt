@@ -9,6 +9,9 @@ input_schema = dbutils.widgets.get("input_schema")
 
 # MAGIC %sql
 # MAGIC
+# MAGIC CREATE CATALOG IF NOT EXISTS `${input_catalog}`;
+# MAGIC CREATE SCHEMA IF NOT EXISTS `${input_catalog}`.`${input_schema}`;
+# MAGIC
 # MAGIC CREATE VOLUME IF NOT EXISTS `${input_catalog}`.`${input_schema}`.`airlines`;
 # MAGIC CREATE VOLUME IF NOT EXISTS `${input_catalog}`.`${input_schema}`.`iata_data`;
 # MAGIC CREATE VOLUME IF NOT EXISTS `${input_catalog}`.`${input_schema}`.`raw`
