@@ -1,7 +1,8 @@
 {{
     config(
         materialized='materialized_view',
-        liquid_clustered_by="airline_name"
+        tblproperties={"delta.enableChangeDataFeed":"true"},
+        zorder="airline_name"
     )
 }}
 
@@ -16,9 +17,9 @@ final AS (
     
     SELECT 
         airline_name
-        ,date
+        ,ArrDate
         ,COUNT(*) AS no_flights
-        ,SUM(IF(isarrdelayed = TRUE,1,0)) AS tot_delayed
+        ,SUM(IF(IsArrDelayed = TRUE,1,0)) AS tot_delayed
         ,ROUND(tot_delayed*100/no_flights,2) AS perc_delayed
         FROM airline_trips_silver
         WHERE airline_name IS NOT NULL
