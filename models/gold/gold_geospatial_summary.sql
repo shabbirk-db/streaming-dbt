@@ -1,7 +1,8 @@
 {{
     config(
         materialized='materialized_view',
-        liquid_clustered_by=['date','airline_name']
+        tblproperties={"delta.enableChangeDataFeed":"true"},
+        zorder=['ArrDate','airline_name']
     )
 }}
 
@@ -15,7 +16,7 @@ airline_trips_silver AS (
 geospatial_aggregation AS (
 
     SELECT
-    date
+    ArrDate
     ,airline_name
     ,origin_airport_name
     ,origin_city

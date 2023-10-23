@@ -40,7 +40,8 @@ bronze_stream as (
 
     SELECT 
         *
-        ,TO_DATE(STRING(INT(Year*10000+Month*100+DayofMonth)),'yyyyMMdd') AS Date
+        ,TO_DATE(STRING(INT(Year*10000+Month*100+DayofMonth)),'yyyyMMdd') AS ArrDate
+        ,TO_TIMESTAMP(STRING(BIGINT(Year*100000000+Month*1000000+DayofMonth*10000+ArrTime)),'yyyyMMddHHmm') AS ArrTimestamp
     FROM STREAM({{ref("airline_trips_bronze")}})
 ),
 
@@ -48,17 +49,17 @@ final as (
 
 SELECT 
   {{ dbt_utils.generate_surrogate_key([
-                'Date', 
-                'DepTime'
+                'ArrTimestamp'
             ])
         }} as delay_id
   ,ActualElapsedTime
   ,ArrDelay::INT
-  ,ArrTime 
   ,CRSArrTime 
   ,CRSDepTime 
   ,CRSElapsedTime 
   ,Cancelled::INT
+  ,ArrDate
+  ,ArrTimestamp
   ,DayOfWeek
   ,DayOfMonth
   ,Month
@@ -73,7 +74,6 @@ SELECT
   ,IsDepDelayed
   ,Origin 
   ,UniqueCarrier
-  ,Date
   ,airline_name
   ,origin_city
   ,origin_airport_name
@@ -85,11 +85,11 @@ SELECT
   ,dest_coordinates_array
   ,file_modification_time
 FROM STREAM(bronze_stream) raw
-LEFT JOIN origin_airport_codes
+INNER JOIN origin_airport_codes
   ON raw.Origin = origin_airport_codes.iata_code
-LEFT JOIN dest_airport_codes
+INNER JOIN dest_airport_codes
   ON raw.Dest = dest_airport_codes.iata_code  
-LEFT JOIN airline_names 
+INNER JOIN airline_names 
   ON raw.UniqueCarrier = airline_names.iata
 )
 
