@@ -2,7 +2,7 @@
     config(
         materialized='streaming_table',
         liquid_clustered_by=['ArrDate','airline_name'],
-        enabled=True
+        enabled=False
     )
 }}
 

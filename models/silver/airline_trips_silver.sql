@@ -1,8 +1,7 @@
 {{
     config(
-        materialized='streaming_table',
-        liquid_clustered_by="Date"
-    )
+        materialized='streaming_table'
+        )
 }}
 
 WITH 
