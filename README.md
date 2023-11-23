@@ -22,6 +22,8 @@ This dbt project includes a helper notebook to simulate a stream of airlines dat
   - Run the following dbt commands: 
     - `dbt deps`
     - `dbt build`
+   
+3. To try an incremental refresh, return to the helper notebook and stream additional files, before kicking off the dbt job again!
 
 ### The data model:
 
