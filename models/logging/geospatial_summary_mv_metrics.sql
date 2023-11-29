@@ -10,3 +10,4 @@ SELECT
 FROM event_log(TABLE({{ ref('gold_geospatial_summary') }}))
 WHERE
   event_type = 'planning_information'
+ORDER BY timestamp    
