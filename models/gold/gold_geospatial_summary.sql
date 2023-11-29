@@ -8,11 +8,6 @@
 
 WITH
 
-airline_trips_silver AS (
-
-    SELECT * FROM {{ ref('airline_trips_silver') }}
-),
-
 geospatial_aggregation AS (
 
     SELECT
@@ -26,7 +21,7 @@ geospatial_aggregation AS (
     ,COALESCE(ROUND(AVG(DepDelay),0),0) as Average_Departure_Delay_mins
     ,COALESCE(ROUND(MAX(DepDelay),0),0) as Max_Departure_Delay_mins
     ,ROUND(SUM(IFF(IsDepdelayed = 'YES',1,0)) / COUNT(*),2)*100 AS Percentage_Delayed_Departures
-    FROM airline_trips_silver
+    FROM {{ ref('airline_trips_silver') }}
     GROUP BY ALL
 
 ),
