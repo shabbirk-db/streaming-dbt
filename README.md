@@ -2,7 +2,10 @@
 
 ### The demo environment:
 
-this demo for test by Samir - personal 
+this demo for test by Samir - personal .
+
+----------
+
 You are receiving a feed of airline trips across the United States over time, and want to stream this into your Databricks Lakehouse to generate live insights for a BI tool, as well as live updating features for a ML model to predict delays of future trips.
 
 This dbt project includes a helper notebook to simulate a stream of airlines data (packaged as example data in all Databricks environments), and a series of transformations to enrich this data and maintain the layer of Materialized Views needed for your downstream BI.
