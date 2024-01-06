@@ -35,4 +35,4 @@ models:
   streaming_dbt_demo:
 
 vars:
-  input_path: '/Volumes/hive_metastore/airlines_source'
+  input_path: '/dbdemos/product/Volumes/airlines_source'
