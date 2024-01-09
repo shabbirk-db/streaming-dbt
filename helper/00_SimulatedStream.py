@@ -18,8 +18,8 @@
 
 # COMMAND ----------
 
-dbutils.widgets.text("input_catalog", "catalog")
-dbutils.widgets.text("input_schema", "schema")
+dbutils.widgets.text("input_catalog", "hive_metastore")
+dbutils.widgets.text("input_schema", "airlines_source")
 
 input_catalog = dbutils.widgets.get("input_catalog")
 input_schema = dbutils.widgets.get("input_schema")
